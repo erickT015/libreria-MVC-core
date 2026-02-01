@@ -11,13 +11,9 @@ Proyecto en progreso desarrollado con \*\*ASP.NET Core MVC\*\* y \*\*Entity Fram
 Evolucionar un CRUD base hacia un sistema más completo (tipo biblioteca), incorporando:
 
 \- Modelado correcto de entidades
-
 \- Uso de Fluent API
-
 \- Migraciones con EF Core
-
 \- Buenas prácticas en controladores MVC
-
 \- Separación de responsabilidades
 
 
@@ -25,33 +21,31 @@ Evolucionar un CRUD base hacia un sistema más completo (tipo biblioteca), incor
 \## Estado actual
 
 \- CRUD funcional de Empleados
-
 \- DbContext configurado con Fluent API
-
 \- Migraciones aplicadas a base de datos
-
 \- Campo de contraseña preparado como `PasswordHash`
-
 \- Uso de appsettings de ejemplo (sin credenciales reales)
 
 
 
-> La seguridad (hashing de contraseñas, validaciones avanzadas) está planificada pero aún no implementada.
+\## La seguridad se implementa de forma incremental:
+
+\- Hashing de contraseñas con BCrypt en la creación de empleados
+\- Cambio de contraseña opcional en la edición de empleados
+\- Separación entre entidad de dominio y ViewModel para formularios
+\- Validaciones básicas en vistas MVC
+
+Las validaciones avanzadas y flujos de autenticación se abordarán en etapas posteriores.
 
 
 
 \## 🛠️ Tecnologías
 
 \- ASP.NET Core MVC
-
 \- Entity Framework Core
-
 \- SQL Server
-
 \- Fluent API
-
 \- Razor Views
-
 \- Bootstrap
 
 
@@ -59,11 +53,8 @@ Evolucionar un CRUD base hacia un sistema más completo (tipo biblioteca), incor
 \## Próximos pasos
 
 \- Implementar hashing de contraseñas al crear/editar usuarios
-
 \- Agregar entidades de dominio (Libros, Clientes, Préstamos)
-
 \- Definir relaciones con Code First
-
 \- Mejorar validaciones y UX
 
 
