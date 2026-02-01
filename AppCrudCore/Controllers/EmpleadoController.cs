@@ -76,20 +76,16 @@ namespace AppCrudCore.Controllers
             if (empleadoDb == null)
                 return NotFound();
 
-            var empleado = new EmpleadoEditViewModel
+            var empleado = new EmpleadoEditViewModel //usamos el modelView especifico para editar
             {
                 IdEmpleado = empleadoDb.IdEmpleado,
                 NombreCompleto = empleadoDb.NombreCompleto,
                 Correo = empleadoDb.Correo,
                 FechaContrato = empleadoDb.FechaContrato,
                 Activo = empleadoDb.Activo
-
-                // ❌ NO Password
-                // ❌ NO PasswordHash
-                // ❌ NO ConfirmarPass
             };
 
-            return View(empleado); // ✅ AHORA SÍ
+            return View(empleado); 
         }
 
         //EDITAR EMPLEADO
@@ -145,13 +141,10 @@ namespace AppCrudCore.Controllers
             }
             catch (Exception)
             {
-                // Ocurrió un error
                 ModelState.AddModelError(
                     "",
                     "Ocurrió un error al actualizar el empleado"
                 );
-
-                // Retornar vista con el mensaje de error
                 return View(empleado);
             }
         }
