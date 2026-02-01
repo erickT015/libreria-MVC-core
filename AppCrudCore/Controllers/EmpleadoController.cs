@@ -90,6 +90,7 @@ namespace AppCrudCore.Controllers
 
         //EDITAR EMPLEADO
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(EmpleadoEditViewModel empleado)
         {
             try
