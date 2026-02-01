@@ -5,11 +5,12 @@
 }
 
 }
-@model AppCrudCore.Models.Empleado;
+@model AppCrudCore.Models.ViewModels.EmpleadoEditViewModel;
 
 <div class="row">
     <div class="col-sm-8 offset-sm-2">
         <h2> Editar Empleado</h2>
+        <div asp-validation-summary="All" class="text-danger"></div>
         <form asp-controller="Empleado" asp-action="Editar" method="post">
             <input asp-for="IdEmpleado" type="hidden" />
             <div class="mb-3">
@@ -25,8 +26,20 @@
                 <input class="form-control" asp-for="FechaContrato" type="date" />
             </div>
             <div class="mb-3">
-                <label>Contraseña</label>
-                <input class="form-control" asp-for="PasswordHash" type="text" />
+                <label>Contraseña Nueva</label>
+                <div class="input-group">
+                    <input asp-for="NuevaPass" type="password" class="form-control" id="NuevaPass" />
+                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('NuevaPass', this)"> <i class="bi bi-eye"></i> </button>
+                </div>
+                <span asp-validation-for="NuevaPass" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label>Confimar Contraseña Nueva</label>
+                <div class="input-group">
+                    <input asp-for="ConfirmarPass" type="password" class="form-control" id="confirmarPass" />
+                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('confirmarPass', this)"><i class="bi bi-eye"></i></button>
+                </div>
+                <span asp-validation-for="ConfirmarPass" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <input class="form-check-input" asp-for="Activo" type="checkbox" id="chkActivo" />
@@ -40,3 +53,24 @@
         </form>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}
+
+<script>
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector("i");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+        }
+    }
+</script>
