@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppCrudCore.Models.ViewModels
 {
@@ -10,6 +11,11 @@ namespace AppCrudCore.Models.ViewModels
         [Required(ErrorMessage = "El nombre es obligatorio")]
         [StringLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres")]
         public string NombreCompleto { get; set; }
+
+
+        [Required(ErrorMessage = "La cédula es obligatoria")]
+        [StringLength(20, ErrorMessage = "la cédula no puede superar los 20 caracteres")]
+        public string Cedula { get; set; }
 
         [Required(ErrorMessage = "El correo es obligatorio")]
         [EmailAddress(ErrorMessage = "El correo no tiene un formato válido")]
@@ -27,6 +33,11 @@ namespace AppCrudCore.Models.ViewModels
         public DateOnly FechaContrato { get; set; }
 
         public bool Activo { get; set; }
+
+        [Required]
+        public int RolId { get; set; }
+
+
     }
 }
 

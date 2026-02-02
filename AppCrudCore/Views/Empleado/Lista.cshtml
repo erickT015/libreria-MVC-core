@@ -13,7 +13,9 @@
                 <tr>
                     <th>Id</th>
                     <th>Nombre completo</th>
+                    <th>Cédula</th>
                     <th>Correo</th>
+                    <th>Permisos</th>
                     <th>Fecha contraro</th>
                     <th>Activo</th>
                     <th></th>
@@ -25,7 +27,9 @@
                     <tr>
                         <td>@item.IdEmpleado</td>
                         <td>@item.NombreCompleto</td>
+                    <td>@item.Cedula</td>
                         <td>@item.Correo</td>
+                        <td>@item.Rol.Nombre</td>
                         <td>@item.FechaContrato.ToString("dd/MM/yyyy")</td>
                         <td>@(item.Activo ? "Si": "NO")</td>
                         <td>

@@ -1,10 +1,11 @@
 ﻿using AppCrudCore.Data; //conexion a base de datos
 using AppCrudCore.Models; // modelos
+using AppCrudCore.Models.ViewModels;
+using BCrypt.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using BCrypt.Net;
-using AppCrudCore.Models.ViewModels;
 
 
 namespace AppCrudCore.Controllers
@@ -21,12 +22,24 @@ namespace AppCrudCore.Controllers
             _appDBContext = appDBContext;
         }
 
+        private void CargarRoles()//METODO PRIVADO PARA CARGAR ROLES
+        {
+            ViewBag.Rol = _appDBContext.Rol
+        .Where(r => r.Activo)
+        .Select(r => new SelectListItem
+        {
+            Value = r.IdRol.ToString(),
+            Text = r.Nombre
+        })
+        .ToList();
+        }
 
         //RENDERIZAR LISTA
         [HttpGet]
         public async Task<IActionResult> Lista()
         {
             var lista = await _appDBContext.Empleados
+                  .Include(empleado => empleado.Rol) //conecta con la tabla de rol
                                .AsNoTracking() // solo lectura
                                .ToListAsync(); //enlistar items
 
@@ -38,6 +51,7 @@ namespace AppCrudCore.Controllers
         [HttpGet]
         public IActionResult Nuevo()
         {
+            CargarRoles();
             return View();
         }
 
@@ -46,6 +60,10 @@ namespace AppCrudCore.Controllers
         [HttpPost]
         public async Task<IActionResult> Nuevo(Empleado empleado)
         {
+            try
+            {
+                CargarRoles();
+
             if (!ModelState.IsValid)
                 return View(empleado);
 
@@ -54,7 +72,9 @@ namespace AppCrudCore.Controllers
                 NombreCompleto = empleado.NombreCompleto,
                 Correo = empleado.Correo,
                 FechaContrato = empleado.FechaContrato,
+                Cedula = empleado.Cedula,
                 Activo = empleado.Activo,
+                RolId = empleado.RolId,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(empleado.PasswordHash)
             };
 
@@ -63,6 +83,17 @@ namespace AppCrudCore.Controllers
             await _appDBContext.SaveChangesAsync(); //actualizar
 
             return RedirectToAction(nameof(Lista)); //redirigir a la vista de lista
+
+                //aca va el return
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Ah ocurrido este error"+ ex
+                );
+                return View(empleado);
+            }
         }
 
 
@@ -70,6 +101,8 @@ namespace AppCrudCore.Controllers
         [HttpGet]
         public async Task<IActionResult> Editar(int id)
         {
+            CargarRoles();
+
             var empleadoDb = await _appDBContext.Empleados
            .FirstOrDefaultAsync(e => e.IdEmpleado == id);
 
@@ -82,7 +115,9 @@ namespace AppCrudCore.Controllers
                 NombreCompleto = empleadoDb.NombreCompleto,
                 Correo = empleadoDb.Correo,
                 FechaContrato = empleadoDb.FechaContrato,
-                Activo = empleadoDb.Activo
+                Activo = empleadoDb.Activo,
+                RolId = empleadoDb.RolId,
+                Cedula = empleadoDb.Cedula
             };
 
             return View(empleado); 
@@ -95,6 +130,7 @@ namespace AppCrudCore.Controllers
         {
             try
             {
+                CargarRoles();
 
                 if (!ModelState.IsValid)
                     return View(empleado);
@@ -109,9 +145,11 @@ namespace AppCrudCore.Controllers
 
                 //  Actualizar los campos con los nuevos datos
                 empleadoDb.NombreCompleto = empleado.NombreCompleto;
+                empleadoDb.Cedula=empleado.Cedula;
                 empleadoDb.Correo = empleado.Correo;
                 empleadoDb.FechaContrato = empleado.FechaContrato;
                 empleadoDb.Activo = empleado.Activo;
+                empleadoDb.RolId = empleado.RolId;
 
                 // Solo entramos aquí si el usuario escribió algo
                 if (!string.IsNullOrWhiteSpace(empleado.NuevaPass))

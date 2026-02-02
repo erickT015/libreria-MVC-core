@@ -8,14 +8,26 @@
 <div class="row">
     <div class="col-sm-8 offset-sm-2">
         <h2> Nuevo Empleado</h2>
+        <div asp-validation-summary="All" class="text-danger"></div>
         <form asp-controller="Empleado" asp-action="Nuevo" method="post">
             <div class="mb-3">
                 <label>Nombre completo</label>
                 <input class="form-control" asp-for="NombreCompleto" type="text" />
             </div>
             <div class="mb-3">
+                <label>Cédula</label>
+                <input class="form-control" asp-for="Cedula" type="text" />
+            </div>
+            <div class="mb-3">
                 <label>Correo</label>
                 <input class="form-control" asp-for="Correo" type="text" />
+            </div>
+            <div class="mb-3">
+            <select asp-for="RolId"
+                    asp-items="ViewBag.Rol"
+                    class="form-select mb-3">
+                <option value="">Seleccione un rol</option>
+            </select>
             </div>
             <div class="mb-3">
                 <label>Contraseña</label>
@@ -37,3 +49,7 @@
         </form>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}
