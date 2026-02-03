@@ -4,21 +4,25 @@ using AppCrudCore.Models;
 
 namespace AppCrudCore.Data
 {
-    public class AppDBContext: DbContext
+    public class AppDBContext : DbContext
     {
-        public AppDBContext(DbContextOptions<AppDBContext> options) :base(options)
+        public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
-            
+
         }
 
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Rol> Rol { get; set; }
+        public DbSet<Cliente> Cliente { get; set; }
+        public DbSet<Libro> Libro { get; set; }
+        public DbSet<Categoria> Categoria { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
-            //prpiedades para tabla empleaos
+
+            //==PROPIEDADES DE LA TABLA EMPLEADO
             modelBuilder.Entity<Empleado>(tb =>
             {
                 //propiedades para columna "col" idEmpleado
@@ -30,6 +34,7 @@ namespace AppCrudCore.Data
                 tb.Property(col => col.Cedula)
                 .IsRequired()
                 .HasMaxLength(20);
+                tb.HasIndex(col => col.Cedula).IsUnique();
 
                 tb.Property(col => col.NombreCompleto).HasMaxLength(50);
 
@@ -46,7 +51,7 @@ namespace AppCrudCore.Data
 
             modelBuilder.Entity<Empleado>().ToTable("Empleado"); //le asignamos el nombre, a la fuerza no por convencion
 
-            //prpiedades para tabla Rol
+            //==PROPIEDADES DE LA TABLA ROL
             modelBuilder.Entity<Rol>(tb =>
             {
                 //propiedades para columna "col" IdRol
@@ -58,6 +63,7 @@ namespace AppCrudCore.Data
                 tb.Property(col => col.Nombre)
                 .HasMaxLength(50)// maximo 50
                 .IsRequired(); //no nulo
+
                 tb.HasIndex(col => col.Nombre).IsUnique();// nombre unico
 
                 tb.Property(col => col.Descripcion).HasMaxLength(100);
@@ -95,6 +101,81 @@ namespace AppCrudCore.Data
 
             });
 
+            //==PROPIEDADES DE LA TABLA CLIENTE
+            modelBuilder.Entity<Cliente>(tb =>
+            {
+                //propiedaes para columnas
+                tb.HasKey(col => col.IdCliente);
+                tb.Property(col => col.IdCliente)
+               .UseIdentityColumn() //incremental (1,1)
+               .ValueGeneratedOnAdd(); //no envies valor, la db lo gesyiona
+
+                tb.HasIndex(col => col.Cedula).IsUnique();
+
+                tb.HasOne(col => col.Rol)
+                .WithMany()
+                .HasForeignKey(col => col.RolId);
+            });
+
+            //==PROPIEDADES DE LA TABLA LIBRO
+            modelBuilder.Entity<Libro>(tb =>
+            {
+                tb.HasKey(col => col.IdLibro);
+                tb.Property(col => col.IdLibro)
+               .UseIdentityColumn() //incremental (1,1)
+               .ValueGeneratedOnAdd(); //no envies valor, la db lo gesyiona
+
+                tb.HasIndex(col => col.ISBN).IsUnique();
+                tb.HasIndex(col => col.Titulo);
+
+                tb.HasOne(col => col.Categoria)
+                .WithMany()
+                .HasForeignKey(col => col.CategoriaId);
+            });
+
+            modelBuilder.Entity<Libro>().ToTable(tb =>
+            {
+                tb.HasCheckConstraint(
+                    "CK_Libro_Stock","StockDisponible <= StockTotal"
+                    );
+                tb.HasCheckConstraint(
+                    "CK_Libro_Stock_NoNegativo","StockTotal >= 0 AND StockDisponible >= 0"
+                    );
+            });
+
+            //==PROPIEDADES DE LA TABLA CATEGORIA
+            modelBuilder.Entity<Categoria>(tb =>
+            {
+                //propiedades para columna "col" Idcategoria
+                tb.HasKey(col => col.IdCategoria); //es primary
+                tb.Property(col => col.IdCategoria)
+                .UseIdentityColumn() //incremental (1,1)
+                .ValueGeneratedOnAdd(); //no envies valor, la db lo gesyiona
+
+                tb.Property(col => col.Nombre)
+                .HasMaxLength(30)// maximo 50
+                .IsRequired(); //no nulo
+                tb.HasIndex(col => col.Nombre).IsUnique();// nombre unico
+
+                tb.Property(col => col.Activo)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+                // ============================
+                // SEED DE DATOS (CATEGORIAS INICIALES)
+                // ============================
+                tb.HasData(
+                    new Categoria { IdCategoria = 1, Nombre = "Literatura", Activo = true},
+                    new Categoria { IdCategoria = 2, Nombre = "Ciencia", Activo = true },
+                    new Categoria { IdCategoria = 3, Nombre = "Tecnología", Activo = true },
+                    new Categoria { IdCategoria = 4, Nombre = "Historia", Activo = true },
+                    new Categoria { IdCategoria = 5, Nombre = "Fantasía", Activo = true },
+                    new Categoria { IdCategoria = 6, Nombre = "Ciencia Ficción", Activo = true },
+                    new Categoria { IdCategoria = 7, Nombre = "Educación", Activo = true },
+                    new Categoria { IdCategoria = 8, Nombre = "Infantil", Activo = true }
+                );
+
+            });
         }
 
     }

@@ -4,6 +4,7 @@ using AppCrudCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppCrudCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260203072349_Tabla categoria y ajustes de Libro y cliente")]
+    partial class TablacategoriayajustesdeLibroycliente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,12 +219,16 @@ namespace AppCrudCore.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("CategoriaId")
+                    b.Property<int?>("CategoriaIdCategoria")
                         .HasColumnType("int");
 
                     b.Property<string>("ISBN")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("IdCategoria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Resumen")
                         .IsRequired()
@@ -241,7 +248,7 @@ namespace AppCrudCore.Migrations
 
                     b.HasKey("IdLibro");
 
-                    b.HasIndex("CategoriaId");
+                    b.HasIndex("CategoriaIdCategoria");
 
                     b.HasIndex("ISBN")
                         .IsUnique();
@@ -336,9 +343,7 @@ namespace AppCrudCore.Migrations
                 {
                     b.HasOne("AppCrudCore.Models.Categoria", "Categoria")
                         .WithMany()
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoriaIdCategoria");
 
                     b.Navigation("Categoria");
                 });

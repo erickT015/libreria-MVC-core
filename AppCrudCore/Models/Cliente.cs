@@ -1,0 +1,43 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AppCrudCore.Models
+{
+    public class Cliente
+    {
+        public int IdCliente { get; set; }
+
+        [Required(ErrorMessage = "la cédula es obligatorio")]
+        [StringLength(20, ErrorMessage = "La cédula no puede superar los 20 caracteres")]
+        public string Cedula { get; set; }
+
+        
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [StringLength(150, ErrorMessage = "El nombre no puede superar los 150 caracteres")]
+        public string NombreCompleto { get; set; }
+
+
+        [Required(ErrorMessage = "El correo es obligatorio")]
+        [EmailAddress(ErrorMessage = "El correo no tiene un formato válido")]
+        [StringLength(150, ErrorMessage = "El correo no puede superar los 150 caracteres")]
+        public string Correo { get; set; }
+
+
+        [StringLength(20, ErrorMessage = "El teléfono no puede superar los 20 caracteres")]
+        public string Telefono { get; set; }
+
+
+        [StringLength(250, ErrorMessage = "la dirección no puede superar los 250 caracteres")]
+        public string Direccion {  get; set; }
+
+
+        [Required(ErrorMessage = "La fecha de registro es obligatorio")]
+        public DateOnly FechaRegistro {  get; set; }
+
+
+        [Required]
+        public bool Activo { get; set; }
+
+        public int? RolId { get; set; } //FK Rol
+        public Rol? Rol { get; set; }     // navegación (lectura)
+    }
+}

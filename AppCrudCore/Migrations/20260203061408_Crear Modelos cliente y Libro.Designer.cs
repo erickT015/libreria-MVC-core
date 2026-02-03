@@ -4,6 +4,7 @@ using AppCrudCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppCrudCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260203061408_Crear Modelos cliente y Libro")]
+    partial class CrearModelosclienteyLibro
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,82 +24,6 @@ namespace AppCrudCore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AppCrudCore.Models.Categoria", b =>
-                {
-                    b.Property<int>("IdCategoria")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCategoria"));
-
-                    b.Property<bool>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("IdCategoria");
-
-                    b.HasIndex("Nombre")
-                        .IsUnique();
-
-                    b.ToTable("Categoria");
-
-                    b.HasData(
-                        new
-                        {
-                            IdCategoria = 1,
-                            Activo = true,
-                            Nombre = "Literatura"
-                        },
-                        new
-                        {
-                            IdCategoria = 2,
-                            Activo = true,
-                            Nombre = "Ciencia"
-                        },
-                        new
-                        {
-                            IdCategoria = 3,
-                            Activo = true,
-                            Nombre = "Tecnología"
-                        },
-                        new
-                        {
-                            IdCategoria = 4,
-                            Activo = true,
-                            Nombre = "Historia"
-                        },
-                        new
-                        {
-                            IdCategoria = 5,
-                            Activo = true,
-                            Nombre = "Fantasía"
-                        },
-                        new
-                        {
-                            IdCategoria = 6,
-                            Activo = true,
-                            Nombre = "Ciencia Ficción"
-                        },
-                        new
-                        {
-                            IdCategoria = 7,
-                            Activo = true,
-                            Nombre = "Educación"
-                        },
-                        new
-                        {
-                            IdCategoria = 8,
-                            Activo = true,
-                            Nombre = "Infantil"
-                        });
-                });
 
             modelBuilder.Entity("AppCrudCore.Models.Cliente", b =>
                 {
@@ -124,8 +51,8 @@ namespace AppCrudCore.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<DateOnly>("FechaRegistro")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NombreCompleto")
                         .IsRequired()
@@ -216,8 +143,10 @@ namespace AppCrudCore.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("int");
+                    b.Property<string>("Categoria")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ISBN")
                         .IsRequired()
@@ -240,8 +169,6 @@ namespace AppCrudCore.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("IdLibro");
-
-                    b.HasIndex("CategoriaId");
 
                     b.HasIndex("ISBN")
                         .IsUnique();
@@ -330,17 +257,6 @@ namespace AppCrudCore.Migrations
                         .IsRequired();
 
                     b.Navigation("Rol");
-                });
-
-            modelBuilder.Entity("AppCrudCore.Models.Libro", b =>
-                {
-                    b.HasOne("AppCrudCore.Models.Categoria", "Categoria")
-                        .WithMany()
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Categoria");
                 });
 #pragma warning restore 612, 618
         }
